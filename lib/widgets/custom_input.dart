@@ -35,7 +35,6 @@ class CustomTextField extends StatelessWidget {
             border: InputBorder.none,
             hintText: hintText ?? "",
             contentPadding: EdgeInsets.all(24.0)),
-        maxLines: 1,
         style: regularHeading,
       ),
     );

@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce_app_firebase/constants/colors.dart';
 import 'package:flutter_ecommerce_app_firebase/widgets/custom_button.dart';
 import 'package:flutter_ecommerce_app_firebase/widgets/custom_input.dart';
+import 'package:flutter_ecommerce_app_firebase/utils/alert_dialog_util.dart';
 
 class RegisterScreen extends StatefulWidget {
   @override
@@ -9,6 +11,40 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  String _email = '';
+  String _password = '';
+  bool _isLoading = false;
+  FocusNode _passwordFocusNode;
+
+  @override
+  void initState() {
+    _passwordFocusNode = FocusNode();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _passwordFocusNode?.dispose();
+    super.dispose();
+  }
+
+  Future<String> _createAccount() async {
+    String result = '';
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: _email, password: _password);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        result = 'The password provided is too weak.';
+      } else if (e.code == 'email-already-in-use') {
+        result = 'The account already exists for that email.';
+      }
+    } catch (e) {
+      result = e.toString();
+    }
+    return result;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,15 +65,31 @@ class _RegisterScreenState extends State<RegisterScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 CustomTextField(
+                  onChanged: (value) {
+                    _email = value;
+                  },
+                  onSubmitted: (value) {
+                    _passwordFocusNode.requestFocus();
+                  },
                   hintText: 'Email',
+                  textInputAction:
+                      TextInputAction.next, // Similar to android IME
                 ),
                 CustomTextField(
+                  focusNode: _passwordFocusNode,
+                  isPasswordField: true,
+                  onChanged: (value) {
+                    _password = value;
+                  },
                   hintText: 'Password',
                 ),
                 CustomButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    onCreateAccountButtonPressed();
+                  },
                   text: 'Create Account',
                   isOutlined: false,
+                  isLoading: _isLoading,
                 ),
               ],
             ),
@@ -52,5 +104,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
       ),
     );
+  }
+
+  void onCreateAccountButtonPressed() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    String createAccountResult = await _createAccount();
+    if (createAccountResult.isNotEmpty) {
+      // Error occurred during registration
+      alertDialogBuilder(context, 'Error', createAccountResult, () {
+        setState(() {
+          _isLoading = false;
+        });
+        Navigator.pop(context);
+      });
+    } else {
+      // Go back to login screen
+      Navigator.pop(context);
+    }
   }
 }
