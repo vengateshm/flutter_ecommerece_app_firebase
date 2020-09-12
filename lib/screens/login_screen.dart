@@ -22,9 +22,11 @@ class _LoginScreenState extends State<LoginScreen> {
             children: [
               Padding(
                 padding: const EdgeInsets.only(top: 24.0),
-                child: Text('Welcome User,\nLogin to your account',
+                child: Text(
+                  'Welcome User,\nLogin to your account',
                   textAlign: TextAlign.center,
-                  style: boldHeading,),
+                  style: boldHeading,
+                ),
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -46,9 +48,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 padding: const EdgeInsets.only(bottom: 16.0),
                 child: CustomButton(
                   onPressed: () {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (context) => RegisterScreen()));
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => RegisterScreen()));
                   },
                   text: 'Create New Account',
                   isOutlined: true,
