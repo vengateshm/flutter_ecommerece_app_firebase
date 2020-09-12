@@ -2,15 +2,27 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class BottomTabs extends StatefulWidget {
+  final int selectedTab;
+  final Function(int) tabPressPosition;
+
+  BottomTabs({this.selectedTab, this.tabPressPosition});
+
   @override
   _BottomTabsState createState() => _BottomTabsState();
 }
 
 class _BottomTabsState extends State<BottomTabs> {
-  int selectedTab = 0;
+  int _selectedTab = 0;
+
+  @override
+  void initState() {
+    _selectedTab = widget.selectedTab;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    _selectedTab = widget.selectedTab;
     return Container(
       decoration: BoxDecoration(
           color: Colors.white,
@@ -27,38 +39,38 @@ class _BottomTabsState extends State<BottomTabs> {
         children: [
           BottomTabButton(
             imageURI: 'assets/images/tab_home.png',
-            isSelected: selectedTab == 0 ? true : false,
+            isSelected: _selectedTab == 0 ? true : false,
             onPressed: () {
               setState(() {
-                selectedTab = 0;
+                widget.tabPressPosition(0);
               });
             },
           ),
           BottomTabButton(
             imageURI: 'assets/images/tab_search.png',
-            isSelected: selectedTab == 1 ? true : false,
+            isSelected: _selectedTab == 1 ? true : false,
             onPressed: () {
               setState(() {
-                selectedTab = 1;
+                widget.tabPressPosition(1);
               });
             },
           ),
           BottomTabButton(
             imageURI: 'assets/images/tab_saved.png',
-            isSelected: selectedTab == 2 ? true : false,
+            isSelected: _selectedTab == 2 ? true : false,
             onPressed: () {
               setState(() {
-                selectedTab = 2;
+                widget.tabPressPosition(2);
               });
               ;
             },
           ),
           BottomTabButton(
             imageURI: 'assets/images/tab_logout.png',
-            isSelected: selectedTab == 3 ? true : false,
+            isSelected: _selectedTab == 3 ? true : false,
             onPressed: () {
               setState(() {
-                selectedTab = 3;
+                widget.tabPressPosition(3);
               });
             },
           ),
