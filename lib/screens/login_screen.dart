@@ -127,9 +127,6 @@ class _LoginScreenState extends State<LoginScreen> {
         });
         Navigator.pop(context);
       });
-    } else {
-      // Go back to login screen
-      Navigator.pop(context);
     }
   }
 }
