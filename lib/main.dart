@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
           accentColor: Color(0xffff1e00),
           visualDensity: VisualDensity.adaptivePlatformDensity,
           textTheme:
-              GoogleFonts.openSansTextTheme(Theme.of(context).textTheme)),
+              GoogleFonts.workSansTextTheme(Theme.of(context).textTheme)),
       home: LandingScreen(),
     );
   }

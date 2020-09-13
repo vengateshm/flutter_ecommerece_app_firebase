@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ecommerce_app_firebase/tabs/home_tab.dart';
+import 'package:flutter_ecommerce_app_firebase/tabs/saved_tab.dart';
+import 'package:flutter_ecommerce_app_firebase/tabs/search_tab.dart';
 import 'package:flutter_ecommerce_app_firebase/widgets/bottom_tabs.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -39,23 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       _currentPage = index;
                     });
                   },
-                  children: [
-                    Container(
-                      child: Center(
-                        child: Text('Home Screen'),
-                      ),
-                    ),
-                    Container(
-                      child: Center(
-                        child: Text('Search Screen'),
-                      ),
-                    ),
-                    Container(
-                      child: Center(
-                        child: Text('Saved Screen'),
-                      ),
-                    )
-                  ],
+                  children: [HomeTab(), SearchTab(), SavedTab()],
                 ),
               ),
             ),
@@ -63,8 +50,8 @@ class _HomeScreenState extends State<HomeScreen> {
               selectedTab: _currentPage,
               tabPressPosition: (position) {
                 _tabsPageController.animateToPage(position,
-                duration: Duration(milliseconds: 300),
-                curve: Curves.easeOutCubic);
+                    duration: Duration(milliseconds: 300),
+                    curve: Curves.easeOutCubic);
               },
             )
           ],
