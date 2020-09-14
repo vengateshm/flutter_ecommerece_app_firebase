@@ -19,6 +19,11 @@ class CustomActionBar extends StatelessWidget {
     bool _hasTitle = hasTitle ?? false;
 
     return Container(
+      decoration: BoxDecoration(
+          gradient:
+              LinearGradient(colors: [Colors.white, Colors.white.withOpacity(0.0)],
+                  begin: Alignment(0,0),
+              end: Alignment(0,1))),
       padding:
           EdgeInsets.only(top: 56.0, left: 24.0, right: 24.0, bottom: 24.0),
       child: Row(
