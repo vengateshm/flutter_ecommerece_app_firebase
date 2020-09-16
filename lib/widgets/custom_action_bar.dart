@@ -5,10 +5,16 @@ class CustomActionBar extends StatelessWidget {
   final String title;
   final int cartCount;
   final bool hasBackArrow;
+  final bool hasBackground;
   final bool hasTitle;
 
   const CustomActionBar(
-      {Key key, this.title, this.cartCount, this.hasBackArrow, this.hasTitle})
+      {Key key,
+      this.title,
+      this.cartCount,
+      this.hasBackArrow,
+      this.hasTitle,
+      this.hasBackground})
       : super(key: key);
 
   @override
@@ -16,14 +22,17 @@ class CustomActionBar extends StatelessWidget {
     String _title = title ?? '';
     int _cartCount = cartCount ?? 0;
     bool _hasBackArrow = hasBackArrow ?? false;
+    bool _hasBackground = hasBackground ?? false;
     bool _hasTitle = hasTitle ?? false;
 
     return Container(
       decoration: BoxDecoration(
-          gradient:
-              LinearGradient(colors: [Colors.white, Colors.white.withOpacity(0.0)],
-                  begin: Alignment(0,0),
-              end: Alignment(0,1))),
+          gradient: _hasBackground
+              ? LinearGradient(
+                  colors: [Colors.white, Colors.white.withOpacity(0.0)],
+                  begin: Alignment(0, 0),
+                  end: Alignment(0, 1))
+              : null),
       padding:
           EdgeInsets.only(top: 56.0, left: 24.0, right: 24.0, bottom: 24.0),
       child: Row(
