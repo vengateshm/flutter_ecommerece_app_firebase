@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce_app_firebase/constants/colors.dart';
 import 'package:flutter_ecommerce_app_firebase/widgets/custom_action_bar.dart';
 import 'package:flutter_ecommerce_app_firebase/widgets/horizontal_swipeable_image.dart';
+import 'package:flutter_ecommerce_app_firebase/widgets/product_size.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final String productId;
@@ -75,6 +76,48 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           style: regularHeading,
                         ),
                       ),
+                      ProductSize(
+                          productSizeList: snapshot.data.data()['size']),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 24.0, horizontal: 24.0),
+                        child: Row(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                color:Color(0xffdcdcdc),
+                                borderRadius: BorderRadius.circular(12.0)
+                              ),
+                              child: Image(
+                                image: AssetImage('assets/images/tab_saved.png'),
+
+                                height: 22.0,
+                              ),
+                              height: 65.0,
+                              width: 65.0,
+                              alignment: Alignment.center,
+                            ),
+                            Expanded(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color:Colors.black,
+                                    borderRadius: BorderRadius.circular(12.0)
+                                ),
+                                child: Text('Add To Cart',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16.0
+                                ),),
+                                height: 65.0,
+                                alignment: Alignment.center,
+                                margin: EdgeInsets.only(left: 16.0),
+                              ),
+                            )
+                          ],
+                          mainAxisAlignment: MainAxisAlignment.start,
+                        ),
+                      )
                     ],
                   );
                 }
