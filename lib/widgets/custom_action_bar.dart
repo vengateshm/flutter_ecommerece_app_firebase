@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce_app_firebase/constants/colors.dart';
 
@@ -24,6 +26,11 @@ class CustomActionBar extends StatelessWidget {
     bool _hasBackArrow = hasBackArrow ?? false;
     bool _hasBackground = hasBackground ?? false;
     bool _hasTitle = hasTitle ?? false;
+
+    CollectionReference _usersRef =
+    FirebaseFirestore.instance.collection('Users');
+
+    User _user = FirebaseAuth.instance.currentUser;
 
     return Container(
       decoration: BoxDecoration(
@@ -63,13 +70,22 @@ class CustomActionBar extends StatelessWidget {
             decoration: BoxDecoration(
                 color: Colors.black, borderRadius: BorderRadius.circular(8.0)),
             alignment: Alignment.center,
-            child: Text(
-              '$_cartCount',
-              style: TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white),
-            ),
+            child: StreamBuilder<QuerySnapshot>(
+                stream: _usersRef.doc(_user.uid).collection('Cart').snapshots(),
+                builder: (context, snapshot) {
+                  int _totalItems = 0;
+                  if (snapshot.connectionState == ConnectionState.active) {
+                    List _documents = snapshot.data.docs;
+                    _totalItems = _documents.length;
+                  }
+                  return Text(
+                    '$_totalItems' ?? '0',
+                    style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white),
+                  );
+                }),
           )
         ],
       ),

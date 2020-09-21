@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce_app_firebase/constants/colors.dart';
@@ -17,7 +18,24 @@ class ProductDetailScreen extends StatefulWidget {
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   final CollectionReference _productsRef =
-      FirebaseFirestore.instance.collection('Products');
+  FirebaseFirestore.instance.collection('Products');
+
+  // Create a collection for users
+  final CollectionReference _usersRef =
+  FirebaseFirestore.instance.collection('Users');
+
+  final User _user = FirebaseAuth.instance.currentUser;
+
+  Future _addToCart() {
+    return _usersRef
+        .doc(_user.uid)
+        .collection('Cart')
+        .doc(widget.productId)
+        .set({"size": 1});
+  }
+
+  final SnackBar _snackBar = SnackBar(
+      content: Text('Product added to the cart'));
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +74,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           '\$${snapshot.data.data()['price']}',
                           style: TextStyle(
                               fontSize: 18.0,
-                              color: Theme.of(context).accentColor,
+                              color: Theme
+                                  .of(context)
+                                  .accentColor,
                               fontWeight: FontWeight.w600),
                         ),
                       ),
@@ -85,12 +105,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           children: [
                             Container(
                               decoration: BoxDecoration(
-                                color:Color(0xffdcdcdc),
-                                borderRadius: BorderRadius.circular(12.0)
-                              ),
+                                  color: Color(0xffdcdcdc),
+                                  borderRadius: BorderRadius.circular(12.0)),
                               child: Image(
-                                image: AssetImage('assets/images/tab_saved.png'),
-
+                                image:
+                                AssetImage('assets/images/tab_saved.png'),
                                 height: 22.0,
                               ),
                               height: 65.0,
@@ -98,20 +117,27 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               alignment: Alignment.center,
                             ),
                             Expanded(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    color:Colors.black,
-                                    borderRadius: BorderRadius.circular(12.0)
+                              child: GestureDetector(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.black,
+                                      borderRadius:
+                                      BorderRadius.circular(12.0)),
+                                  child: Text(
+                                    'Add To Cart',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 16.0),
+                                  ),
+                                  height: 65.0,
+                                  alignment: Alignment.center,
+                                  margin: EdgeInsets.only(left: 16.0),
                                 ),
-                                child: Text('Add To Cart',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16.0
-                                ),),
-                                height: 65.0,
-                                alignment: Alignment.center,
-                                margin: EdgeInsets.only(left: 16.0),
+                                onTap: () async {
+                                  await _addToCart();
+                                  Scaffold.of(context).showSnackBar(_snackBar);
+                                },
                               ),
                             )
                           ],
