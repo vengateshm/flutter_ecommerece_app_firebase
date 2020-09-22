@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 class ProductSize extends StatefulWidget {
   final List productSizeList;
+  final Function(String) onSelected;
 
-  ProductSize({this.productSizeList});
+  ProductSize({this.productSizeList, this.onSelected});
 
   @override
   _ProductSizeState createState() => _ProductSizeState();
@@ -14,7 +15,6 @@ class _ProductSizeState extends State<ProductSize> {
 
   @override
   Widget build(BuildContext context) {
-
     return Padding(
       padding: const EdgeInsets.only(left: 20.0),
       child: Row(
@@ -24,6 +24,7 @@ class _ProductSizeState extends State<ProductSize> {
               onTap: () {
                 setState(() {
                   _selected = i;
+                  widget.onSelected('${widget.productSizeList[i]}');
                 });
               },
               child: Container(

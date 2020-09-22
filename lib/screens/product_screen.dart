@@ -18,11 +18,11 @@ class ProductDetailScreen extends StatefulWidget {
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   final CollectionReference _productsRef =
-  FirebaseFirestore.instance.collection('Products');
+      FirebaseFirestore.instance.collection('Products');
 
   // Create a collection for users
   final CollectionReference _usersRef =
-  FirebaseFirestore.instance.collection('Users');
+      FirebaseFirestore.instance.collection('Users');
 
   final User _user = FirebaseAuth.instance.currentUser;
 
@@ -31,11 +31,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         .doc(_user.uid)
         .collection('Cart')
         .doc(widget.productId)
-        .set({"size": 1});
+        .set({"size": _selectedProductSize});
   }
 
-  final SnackBar _snackBar = SnackBar(
-      content: Text('Product added to the cart'));
+  final SnackBar _snackBar =
+      SnackBar(content: Text('Product added to the cart'));
+
+  String _selectedProductSize = '0';
 
   @override
   Widget build(BuildContext context) {
@@ -74,9 +76,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           '\$${snapshot.data.data()['price']}',
                           style: TextStyle(
                               fontSize: 18.0,
-                              color: Theme
-                                  .of(context)
-                                  .accentColor,
+                              color: Theme.of(context).accentColor,
                               fontWeight: FontWeight.w600),
                         ),
                       ),
@@ -97,7 +97,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         ),
                       ),
                       ProductSize(
-                          productSizeList: snapshot.data.data()['size']),
+                        productSizeList: snapshot.data.data()['size'],
+                        onSelected: (selectedSize) {
+                          _selectedProductSize = selectedSize;
+                        },
+                      ),
                       Padding(
                         padding: const EdgeInsets.symmetric(
                             vertical: 24.0, horizontal: 24.0),
@@ -109,7 +113,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                   borderRadius: BorderRadius.circular(12.0)),
                               child: Image(
                                 image:
-                                AssetImage('assets/images/tab_saved.png'),
+                                    AssetImage('assets/images/tab_saved.png'),
                                 height: 22.0,
                               ),
                               height: 65.0,
@@ -122,7 +126,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                   decoration: BoxDecoration(
                                       color: Colors.black,
                                       borderRadius:
-                                      BorderRadius.circular(12.0)),
+                                          BorderRadius.circular(12.0)),
                                   child: Text(
                                     'Add To Cart',
                                     style: TextStyle(

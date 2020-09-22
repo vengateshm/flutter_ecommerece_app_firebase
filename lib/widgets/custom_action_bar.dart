@@ -46,18 +46,23 @@ class CustomActionBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           if (_hasBackArrow)
-            Container(
-              height: 42.0,
-              width: 42.0,
-              decoration: BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(8.0)),
-              alignment: Alignment.center,
-              child: Image(
-                width: 16.0,
-                height: 16.0,
-                image: AssetImage('assets/images/back_arrow.png'),
+            GestureDetector(
+              child: Container(
+                height: 42.0,
+                width: 42.0,
+                decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(8.0)),
+                alignment: Alignment.center,
+                child: Image(
+                  width: 16.0,
+                  height: 16.0,
+                  image: AssetImage('assets/images/back_arrow.png'),
+                ),
               ),
+              onTap: (){
+                Navigator.pop(context);
+              },
             ),
           if (_hasTitle)
             Text(
