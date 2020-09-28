@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce_app_firebase/constants/colors.dart';
+import 'package:flutter_ecommerce_app_firebase/services/FirebaseRepository.dart';
 
 class CustomActionBar extends StatelessWidget {
   final String title;
@@ -10,7 +11,7 @@ class CustomActionBar extends StatelessWidget {
   final bool hasBackground;
   final bool hasTitle;
 
-  const CustomActionBar(
+  CustomActionBar(
       {Key key,
       this.title,
       this.cartCount,
@@ -19,6 +20,13 @@ class CustomActionBar extends StatelessWidget {
       this.hasBackground})
       : super(key: key);
 
+  FirebaseRepository repository = new FirebaseRepository();
+
+  final CollectionReference _usersRef =
+      FirebaseFirestore.instance.collection('Users');
+
+  final User _user = FirebaseAuth.instance.currentUser;
+
   @override
   Widget build(BuildContext context) {
     String _title = title ?? '';
@@ -26,11 +34,6 @@ class CustomActionBar extends StatelessWidget {
     bool _hasBackArrow = hasBackArrow ?? false;
     bool _hasBackground = hasBackground ?? false;
     bool _hasTitle = hasTitle ?? false;
-
-    CollectionReference _usersRef =
-    FirebaseFirestore.instance.collection('Users');
-
-    User _user = FirebaseAuth.instance.currentUser;
 
     return Container(
       decoration: BoxDecoration(
@@ -60,7 +63,7 @@ class CustomActionBar extends StatelessWidget {
                   image: AssetImage('assets/images/back_arrow.png'),
                 ),
               ),
-              onTap: (){
+              onTap: () {
                 Navigator.pop(context);
               },
             ),
@@ -76,7 +79,10 @@ class CustomActionBar extends StatelessWidget {
                 color: Colors.black, borderRadius: BorderRadius.circular(8.0)),
             alignment: Alignment.center,
             child: StreamBuilder<QuerySnapshot>(
-                stream: _usersRef.doc(_user.uid).collection('Cart').snapshots(),
+                stream: _usersRef
+                    .doc(repository.getUserId())
+                    .collection('Cart')
+                    .snapshots(),
                 builder: (context, snapshot) {
                   int _totalItems = 0;
                   if (snapshot.connectionState == ConnectionState.active) {

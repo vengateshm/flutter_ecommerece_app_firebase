@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -69,9 +71,7 @@ class _BottomTabsState extends State<BottomTabs> {
             imageURI: 'assets/images/tab_logout.png',
             isSelected: _selectedTab == 3 ? true : false,
             onPressed: () {
-              setState(() {
-                widget.tabPressPosition(3);
-              });
+              FirebaseAuth.instance.signOut();
             },
           ),
         ],

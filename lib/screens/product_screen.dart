@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce_app_firebase/constants/colors.dart';
+import 'package:flutter_ecommerce_app_firebase/services/FirebaseRepository.dart';
 import 'package:flutter_ecommerce_app_firebase/widgets/custom_action_bar.dart';
 import 'package:flutter_ecommerce_app_firebase/widgets/horizontal_swipeable_image.dart';
 import 'package:flutter_ecommerce_app_firebase/widgets/product_size.dart';
@@ -17,18 +17,11 @@ class ProductDetailScreen extends StatefulWidget {
 }
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
-  final CollectionReference _productsRef =
-      FirebaseFirestore.instance.collection('Products');
-
-  // Create a collection for users
-  final CollectionReference _usersRef =
-      FirebaseFirestore.instance.collection('Users');
-
-  final User _user = FirebaseAuth.instance.currentUser;
+  FirebaseRepository repository = new FirebaseRepository();
 
   Future _addToCart() {
-    return _usersRef
-        .doc(_user.uid)
+    return repository.usersRef
+        .doc(repository.getUserId())
         .collection('Cart')
         .doc(widget.productId)
         .set({"size": _selectedProductSize});
@@ -45,7 +38,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       body: Stack(
         children: [
           FutureBuilder<DocumentSnapshot>(
-              future: _productsRef.doc(widget.productId).get(),
+              future: repository.productsRef.doc(widget.productId).get(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return Scaffold(
@@ -57,10 +50,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
                 // Once product document is fetched
                 if (snapshot.connectionState == ConnectionState.done) {
+                  // Firestore document map data
+                  Map<String, dynamic> documentData = snapshot.data.data();
+                  List images = documentData['images'];
+                  List size = documentData['size'];
+
+                  _selectedProductSize = size[0];
+
                   return ListView(
                     children: [
-                      HorizontalSwipeableImage(
-                          imageList: snapshot.data.data()['images']),
+                      HorizontalSwipeableImage(imageList: images),
                       Padding(
                         padding: const EdgeInsets.symmetric(
                             vertical: 4.0, horizontal: 24.0),
@@ -97,7 +96,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         ),
                       ),
                       ProductSize(
-                        productSizeList: snapshot.data.data()['size'],
+                        productSizeList: size,
                         onSelected: (selectedSize) {
                           _selectedProductSize = selectedSize;
                         },
