@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce_app_firebase/constants/colors.dart';
+import 'package:flutter_ecommerce_app_firebase/screens/cart_screen.dart';
 import 'package:flutter_ecommerce_app_firebase/services/FirebaseRepository.dart';
 
 class CustomActionBar extends StatelessWidget {
@@ -72,31 +73,38 @@ class CustomActionBar extends StatelessWidget {
               _title,
               style: boldHeading,
             ),
-          Container(
-            height: 42.0,
-            width: 42.0,
-            decoration: BoxDecoration(
-                color: Colors.black, borderRadius: BorderRadius.circular(8.0)),
-            alignment: Alignment.center,
-            child: StreamBuilder<QuerySnapshot>(
-                stream: _usersRef
-                    .doc(repository.getUserId())
-                    .collection('Cart')
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  int _totalItems = 0;
-                  if (snapshot.connectionState == ConnectionState.active) {
-                    List _documents = snapshot.data.docs;
-                    _totalItems = _documents.length;
-                  }
-                  return Text(
-                    '$_totalItems' ?? '0',
-                    style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white),
-                  );
-                }),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => CartScreen()));
+            },
+            child: Container(
+              height: 42.0,
+              width: 42.0,
+              decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(8.0)),
+              alignment: Alignment.center,
+              child: StreamBuilder<QuerySnapshot>(
+                  stream: _usersRef
+                      .doc(repository.getUserId())
+                      .collection('Cart')
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    int _totalItems = 0;
+                    if (snapshot.connectionState == ConnectionState.active) {
+                      List _documents = snapshot.data.docs;
+                      _totalItems = _documents.length;
+                    }
+                    return Text(
+                      '$_totalItems' ?? '0',
+                      style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white),
+                    );
+                  }),
+            ),
           )
         ],
       ),
